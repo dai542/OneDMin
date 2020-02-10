@@ -1,4 +1,4 @@
-# cmd conda build . -c pacchem
+# cmd conda build .
 package:
     name: onedmin
     version: "0.1.0"
@@ -17,4 +17,3 @@ requirements:
         - {{ compiler('fortran') }}
         - blas
         - openblas # [linux]
-        # add python dependencies when ready
