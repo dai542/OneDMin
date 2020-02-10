@@ -1,0 +1,24 @@
+$lennard_jones
+theory_level = 1
+potential = lj126
+nsamps = 2
+njobs = 4
+smin = 2
+smax = 5
+run_prefix = run
+save_prefix = save
+$end
+
+$properties
+theory_level = 2
+run_prefix = run
+save_prefix = save
+$end
+
+$baths
+N2
+$end
+
+$targets
+CH4
+$end
