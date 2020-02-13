@@ -1,4 +1,4 @@
-# cmd conda build .
+# cmd conda build . -c conda-forge
 package:
     name: onedmin
     version: "1.0.0"
@@ -12,8 +12,10 @@ requirements:
         - {{ compiler('fortran') }}
         - blas
         - openblas # [linux]
+        - lapack
     run:
         - cmake
         - {{ compiler('fortran') }}
         - blas
         - openblas # [linux]
+        - lapack
