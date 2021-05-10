@@ -20,10 +20,10 @@ jobs:
               name: Test the code
               command: |
                   source activate onedmin-env
-                  cd examples/CH4_N2/exp6/SpinMethod1
-                  onedmin-exp6.x
+                  cd examples/ch4_he/exp6/SpinMethod1
+                  onedmin-exp6.x < input.dat > output.dat
                   cd ../SpinMethod2
-                  onedmin-exp6.x
+                  onedmin-exp6.x < input.dat > output.dat
 workflows:
     version: 2
     build-all:
