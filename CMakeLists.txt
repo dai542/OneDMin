@@ -3,6 +3,8 @@ cmake_minimum_required(VERSION 2.8)
 
 find_package(BLAS REQUIRED)
 find_package(LAPACK REQUIRED)
+message(STATUS "Found BLAS: ${BLAS_LIBRARIES}")
+message(STATUS "Found LAPACK: ${LAPACK_LIBRARIES}")
 
 add_library(ljlibs
     ${PROJECT_SOURCE_DIR}/src/mass.f
@@ -14,9 +16,6 @@ add_library(ddmolprolibs
     ${PROJECT_SOURCE_DIR}/src/dd-molpro.f)
 add_library(ddgaussianlibs
     ${PROJECT_SOURCE_DIR}/src/dd-gaussian.f)
-
-message(STATUS "Found BLAS: ${BLAS_LIBRARIES}")
-message(STATUS "Found LAPACK: ${LAPACK_LIBRARIES}")
 
 add_executable(onedmin-exp6.x
     ${PROJECT_SOURCE_DIR}/src/onedmin.f)

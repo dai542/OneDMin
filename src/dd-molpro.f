@@ -182,7 +182,7 @@ c                  (Not yet implemented for Gaussian)
 
 c read template & write QC input file
       open(unit=7,file=tnam)       ! template file
-      open(unit=10,file='qc.in')   ! temporary input file
+      open(unit=10,file='run.inp')   ! temporary input file
       do i=1,100
         read(unit=7,end=100,fmt='(a80)') string
         if (string.eq."GEOMETRY") then
@@ -304,7 +304,7 @@ c **********************************************************************
 
 c read template & write QC input file
       open(unit=7,file=tnam)
-      open(unit=10,file='qc.in')
+      open(unit=10,file='run.inp')
       do i=1,100
         read(unit=7,end=100,fmt='(a80)') string
         if (string.eq."GEOMETRY") then
@@ -329,10 +329,10 @@ c          write(10,*)"end"
       close(10)
 
 c do molpro calculation
-      call system('./m.x ')
+      call system('./ene.x ')
 
 c read the formatted checkpoint file
-      open (8,file='qc.out')
+      open (8,file='run.out')
 
 c     molpro reorders the atoms, and I can't figure out how to make it stop, so...
       Astr='ATOMIC COORDINATES'
@@ -361,7 +361,7 @@ c                                             to ANT atom K
       enddo
       goto 150
 
- 170  write(6,*)"Couldn't find string '",astr,"' in qc.out"
+ 170  write(6,*)"Couldn't find string '",astr,"' in run.out"
       ifail=1
       go to 999
 
@@ -396,7 +396,7 @@ c     get energy
       goto 200
 
 
- 220  write(6,*)"Couldn't find string '",estr,"' in qc.out"
+ 220  write(6,*)"Couldn't find string '",estr,"' in run.out"
       ifail=3
       go to 999
 
@@ -423,7 +423,7 @@ c     get gradients
       enddo
       goto 300
 
- 320  write(6,*)"Couldn't find string '",gstr,"' in qc.out"
+ 320  write(6,*)"Couldn't find string '",gstr,"' in run.out"
       ifail=4
       go to 999
 
@@ -457,7 +457,7 @@ c     get coupling
       enddo
       goto 400
 
- 420  write(6,*)"Couldn't find string '",nstr,"' in qc.out"
+ 420  write(6,*)"Couldn't find string '",nstr,"' in run.out"
       ifail=5
       go to 999
 

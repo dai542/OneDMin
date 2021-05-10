@@ -56,7 +56,8 @@ c common block used to pass the interaction potential
 
 c READ STANDARD INPUT
 c     Standard input must contain these 5 lines
-      read(5,*)ranseed,nsamp   !  num to seed RNG, number of intemol samps
+      read(5,*)ranseed         !  num to seed RNG
+      read(5,*)nsamp           !  num of intemol samps
       read(5,*)filex0          !  file name of the geometry file of the target
       read(5,*)filex1          !  file name of the geometry file of the bath
       read(5,*)smin,smax       !  scan range
@@ -79,7 +80,7 @@ c Set the spin method using the input
 
 c Write output msg and the input variables to the output file
       write(6,*)'---------------------------'
-      write(6,*)'OneDMin'
+      write(6,*)'OneDMin version 1.0'
       write(6,*)'Ahren W. Jasper, Kevin B. Moore III'
       write(6,*)'Argonne National Laboratory'
       write(6,*)'---------------------------'
@@ -122,7 +123,7 @@ c Write output msg and the input variables to the output file
       j=0
       do
         j=j+1
-        read(94,*,END=322)symb1(j),xx1(1,1,j),xx1(1,2,j),xx0(1,3,j)
+        read(94,*,END=322)symb1(j),xx1(1,1,j),xx1(1,2,j),xx1(1,3,j)
         xx1(1,1,j)=xx1(1,1,j)/autoang  ! A to a0
         xx1(1,2,j)=xx1(1,2,j)/autoang
         xx1(1,3,j)=xx1(1,3,j)/autoang
