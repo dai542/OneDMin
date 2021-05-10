@@ -74,13 +74,7 @@ c make calls
       do ic = 1,nc
         ntmp = ns(ic)
         tnam = tname(ic)
-        if (np(ic).eq.1) then
-c       call G03
         call dd_g03(symb,tnam,x,y,z,ptmp,gptmp,dptmp,nat,
-     &               mnat,ntmp,mnsurf,ifail)
-        elseif (np(ic).eq.2) then
-c       call Molpro 2006
-        call dd_m06(symb,tnam,x,y,z,ptmp,gptmp,dptmp,nat,
      &               mnat,ntmp,mnsurf,ifail)
 c         handle failures
           if (ifail.eq.0) then
@@ -90,10 +84,6 @@ c           can't fix
             write(6,*)"QC failure"
             stop
           endif
-        else
-          print *,"np(",ic,") = ",np(ic),", which is not allowed"
-          stop
-        endif
         do i=1,ntmp
           ii=i+ictot
           pema(ii)=ptmp(i)
@@ -182,7 +172,7 @@ c                  (Not yet implemented for Gaussian)
 
 c read template & write QC input file
       open(unit=7,file=tnam)       ! template file
-      open(unit=10,file='run.inp')   ! temporary input file
+      open(unit=10,file='qc.inp')   ! temporary input file
       do i=1,100
         read(unit=7,end=100,fmt='(a80)') string
         if (string.eq."GEOMETRY") then
@@ -199,7 +189,7 @@ c read template & write QC input file
       close(10)
 
 c do gaussian calculation
-      call system('./ene.x ')
+      call system('./qc.x ')
 
 c read the formatted checkpoint file
       open (8,file='Test.FChk')
@@ -270,236 +260,6 @@ c organize things
       end
 c **********************************************************************
 c **********************************************************************
-
-
-
-c **********************************************************************
-c **********************************************************************
-      subroutine dd_m06(symbol,tnam,x,y,z,pema,gpema,dvec,nclu,
-     &                                 mnclu,nsurf,mnsurf,ifail)
-
-      implicit none
-      integer i,j,k,nclu,mnclu,lstr,idum,ithis(mnclu),nsurf,mnsurf,
-     &          isurf,jsurf,ifail
-      character*2 symbol(mnclu),cdum
-      character*80 string,tmpstr
-      character*21 Estr
-      character*18 Gstr
-      character*18 Astr
-      character*4 Nstr
-      double precision xk,dx1,dy1,dz1
-      double precision x(mnclu),y(mnclu),z(mnclu),v(mnsurf)
-      double precision gpema(3,mnclu,mnsurf),pema(mnsurf)
-      double precision dvec(3,mnclu,mnsurf,mnsurf)
-      double precision xtmp,ytmp,ztmp,total,dum
-      double precision dx(mnclu,mnsurf),dy(mnclu,mnsurf),
-     &                                  dz(mnclu,mnsurf)
-      double precision cx(mnclu,mnsurf,mnsurf),cy(mnclu,mnsurf,mnsurf),
-     &                                         cz(mnclu,mnsurf,mnsurf)
-      double precision cfloat
-      double precision autoang,so,autoev
-      character*8 tnam
-      parameter(autoang=0.52917706d0)
-      parameter(autoev=27.211d0)
-
-c read template & write QC input file
-      open(unit=7,file=tnam)
-      open(unit=10,file='run.inp')
-      do i=1,100
-        read(unit=7,end=100,fmt='(a80)') string
-        if (string.eq."GEOMETRY") then
-c          write(10,*)"geomtyp=xyz"
-c          write(10,*)"geometry"
-c          write(10,*)"nosym"
-c          write(10,*)"noorient"
-c          write(10,*)nclu
-c          write(10,*)"ANT Direct Dynamics Calculation"
-          do j=1,nclu
-            write(10,fmt='(a3,2x,3f20.10)')symbol(j),
-     &       x(j)*autoang,y(j)*autoang,z(j)*autoang   ! default is Angstroms for geomtyp=xyz
-          enddo
-c          write(10,*)"end"
-        else
-          write(10,fmt='(a80)')string
-        endif
-      enddo
-      write(6,*)"QC TEMPLATE IS TOO LONG (> 100 lines)"
-      stop
- 100  close(7)
-      close(10)
-
-c do molpro calculation
-      call system('./m.x ')
-
-c read the formatted checkpoint file
-      open (8,file='run.out')
-
-c     molpro reorders the atoms, and I can't figure out how to make it stop, so...
-      Astr='ATOMIC COORDINATES'
-      lstr=len(Astr)
- 150  read (8,fmt='(a80)',end=170) string
-      do i=1,3
-        if (string(i:i+lstr-1).eq.Astr) then
-          read(8,*)
-          read(8,*)
-          read(8,*)
-          do j=1,nclu
-            ithis(j)=-1
-          enddo
-          do j=1,nclu
-            read(8,*)idum,cdum,dum,xtmp,ytmp,ztmp  ! read where Molpro reprints the reordered atoms
-            do k=1,nclu
-             total=dabs(xtmp-x(k))+dabs(ytmp-y(k))+dabs(ztmp-z(k))  ! check each (x,y,z) against input (both are in bohr)
-             if (total.le.1.d-4) ithis(j)=k ! if the difference is small, then this is it 
-c                                             (obviously this will fail for weird geometries with very small distances)
-c                                             if everything works, then line number J in the molpro output corresponds
-c                                             to ANT atom K
-            enddo
-          enddo
-          goto 199
-        endif
-      enddo
-      goto 150
-
- 170  write(6,*)"Couldn't find string '",astr,"' in run.out"
-      ifail=1
-      go to 999
-
-
- 199  continue
-      do j=1,nclu
-        if (ithis(j).eq.-1) then
-          write(6,*)"Problem with atom ordering in Molpro output file"
-          ifail=2
-          go to 999
-        endif
-      enddo
-
-
-c READ ENERGIES & GRADIENTS
-
-      DO ISURF=1,NSURF
-
-c     get energy
-      Estr='SETTING MOLPRO_ENERGY'
-      lstr=len(Estr)
- 200  read (8,fmt='(a80)',end=220) string
-      do i=1,3
-        if (string(i:i+lstr-1).eq.Estr) then
-       read (8,fmt='(a80)',end=220) string
-          tmpstr=string(26:49)
-          v(isurf)=cfloat(tmpstr)
-      goto 123
-          goto 299
-        endif
-      enddo
-      goto 200
-
-
- 220  write(6,*)"Couldn't find string '",estr,"' in run.out"
-      ifail=3
-      go to 999
-
- 299  continue
-
-c     get gradients
-      Gstr='MOLGRAD'
-      lstr=len(Gstr)
- 300  read (8,fmt='(a80)',end=320) string
-      do i=1,10
-        if (string(i:i+lstr-1).eq.Gstr) then
-          read(8,*)
-          read(8,*)
-          read(8,*)
-          do j=1,nclu
-            read(8,*)xk,dx1,dy1,dz1
-            k=nint(xk)
-            dx(ithis(k),isurf)=dx1
-            dy(ithis(k),isurf)=dy1
-            dz(ithis(k),isurf)=dz1
-          enddo
-          goto 399
-        endif
-      enddo
-      goto 300
-
- 320  write(6,*)"Couldn't find string '",gstr,"' in run.out"
-      ifail=4
-      go to 999
-
- 399  continue
-
-      ENDDO
-
-c READ NA COUPLINGS
-
-      DO ISURF=1,NSURF
-      DO JSURF=ISURF+1,NSURF
-
-c     get coupling
-      Nstr='MOLD'
-      lstr=len(Nstr)
- 400  read (8,fmt='(a80)',end=420) string
-      do i=1,10
-        if (string(i:i+lstr-1).eq.Nstr) then
-          read(8,*)
-          read(8,*)
-          read(8,*)
-          do j=1,nclu
-            read(8,*)xk,dx1,dy1,dz1
-            k=nint(xk)
-            cx(ithis(k),isurf,jsurf)=dx1
-            cy(ithis(k),isurf,jsurf)=dy1
-            cz(ithis(k),isurf,jsurf)=dz1
-          enddo
-          goto 499
-        endif
-      enddo
-      goto 400
-
- 420  write(6,*)"Couldn't find string '",nstr,"' in run.out"
-      ifail=5
-      go to 999
-
-
- 499  continue
-
-      ENDDO
-      ENDDO
-
- 123  continue
-      close(8)
-
-c organize things
-      do i=1,nsurf
-        pema(i)=v(i)
-        do j=1,nclu
-          gpema(1,j,i)=dx(j,i)
-          gpema(2,j,i)=dy(j,i)
-          gpema(3,j,i)=dz(j,i)
-          dvec(1,j,i,i)=0.d0
-          dvec(2,j,i,i)=0.d0
-          dvec(3,j,i,i)=0.d0
-          do k=i+1,nsurf
-            dvec(1,j,i,k)=cx(j,i,k)
-            dvec(2,j,i,k)=cy(j,i,k)
-            dvec(3,j,i,k)=cz(j,i,k)
-            dvec(1,j,k,i)=-cx(j,i,k)
-            dvec(2,j,k,i)=-cy(j,i,k)
-            dvec(3,j,k,i)=-cz(j,i,k)
-          enddo
-        enddo
-      enddo
-
-999   continue
-      close(8)
-      return
-
-      end
-C**********************************************************************
-C**********************************************************************
-
-
 
 
 C**********************************************************************

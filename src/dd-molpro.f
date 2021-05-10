@@ -74,12 +74,6 @@ c make calls
       do ic = 1,nc
         ntmp = ns(ic)
         tnam = tname(ic)
-        if (np(ic).eq.1) then
-c       call G03
-        call dd_g03(symb,tnam,x,y,z,ptmp,gptmp,dptmp,nat,
-     &               mnat,ntmp,mnsurf,ifail)
-        elseif (np(ic).eq.2) then
-c       call Molpro 2006
         call dd_m06(symb,tnam,x,y,z,ptmp,gptmp,dptmp,nat,
      &               mnat,ntmp,mnsurf,ifail)
 c         handle failures
@@ -90,10 +84,6 @@ c           can't fix
             write(6,*)"QC failure"
             stop
           endif
-        else
-          print *,"np(",ic,") = ",np(ic),", which is not allowed"
-          stop
-        endif
         do i=1,ntmp
           ii=i+ictot
           pema(ii)=ptmp(i)
@@ -144,135 +134,6 @@ c **********************************************************************
 c **********************************************************************
 
 
-
-
-c **********************************************************************
-c **********************************************************************
-      subroutine dd_g03(symbol,tnam,x,y,z,pema,gpema,dvec,nclu,
-     &                              mnclu,nsurf,mnsurf,ifail)
-
-c NOTE: SINGLE SURFACE FOR NOW, NO NA COUPLING
-
-c INPUT
-c
-c SYMBOL(MNCLU) : Array of atomic symbols (H, C, etc...)
-c X,Y,Z(MNCLU) :  Arrays of cartesian coordinates in bohr
-c NCLU :          Number of atoms
-c MNCLU :         Max number of atoms for declaring arrays
-c 
-c OUTPUT:
-c
-c V:               Potential energy in hartree
-c DX,DY,DZ(MNCLU): Gradients in hartree/bohr
-c IFAIL :          Flag giving info about QC failures
-c                  (Not yet implemented for Gaussian)
-
-      implicit none
-      integer i,j,k,nclu,mnclu,lstr,nsurf,mnsurf,ifail
-      character*2 symbol(mnclu)
-      character*80 string,tmpstr
-      character*12 Estr
-      character*7 Gstr
-      double precision x(mnclu),y(mnclu),z(mnclu),xtmp(mnclu*3),v
-      double precision dx(mnclu),dy(mnclu),dz(mnclu)
-      double precision cfloat
-      double precision pema(mnsurf),gpema(3,mnclu,mnsurf)
-      double precision dvec(3,mnclu,mnsurf,mnsurf)
-      character*8 tnam
-
-c read template & write QC input file
-      open(unit=7,file=tnam)       ! template file
-      open(unit=10,file='run.inp')   ! temporary input file
-      do i=1,100
-        read(unit=7,end=100,fmt='(a80)') string
-        if (string.eq."GEOMETRY") then
-          do j=1,nclu
-            write(10,fmt='(a2,2x,3f20.10)')symbol(j),x(j),y(j),z(j)
-          enddo
-        else
-          write(10,fmt='(a80)')string
-        endif
-      enddo
-      write(6,*)"QC TEMPLATE IS TOO LONG (> 100 lines)"
-      stop
- 100  close(7)
-      close(10)
-
-c do gaussian calculation
-      call system('./g.x ')
-
-c read the formatted checkpoint file
-      open (8,file='Test.FChk')
-
-c     get energy
-      Estr='Total Energy'
-      lstr=len(Estr)
- 200  read (8,fmt='(a80)',end=220) string
-      do i=1,3
-        if (string(i:i+lstr-1).eq.Estr) then
-          tmpstr=string(46:80)
-          v=cfloat(tmpstr)
-          goto 299
-        endif
-      enddo
-      goto 200
-
- 220  write(6,*)"Couldn't find string '",estr,"' in Test.FChk"
-      stop
-
- 299  continue
-
-c     get gradients
-      Gstr='Cartesian Gradient'
-      lstr=len(Gstr)
- 300  read (8,fmt='(a80)',end=320) string
-      do i=1,3
-        if (string(i:i+lstr-1).eq.Gstr) then
-          j=0
-          do while (j.lt.nclu*3)
-            if (nclu*3-j.gt.5) then
-              read(8,*)(xtmp(j+k),k=1,5)
-              j=j+5
-            else
-c I think it goes x1,y1,z1,x2,...,zN
-              read(8,*)(xtmp(j+k),k=1,nclu*3-j)
-              j=nclu*3
-            endif
-          enddo
-          goto 399
-        endif
-      enddo
-      goto 300
-
- 320  write(6,*)"Couldn't find string '",gstr,"' in Test.FChk"
-      stop
-
- 399  continue
-      close(8)
-
-      do i=1,nclu
-        j=(i-1)*3
-        dx(i)=xtmp(j+1)
-        dy(i)=xtmp(j+2)
-        dz(i)=xtmp(j+3)
-      enddo
-
-c organize things
-      do i=1,nsurf
-        pema(i)=v
-        do j=1,nclu
-          gpema(1,j,i)=dx(j)
-          gpema(2,j,i)=dy(j)
-          gpema(3,j,i)=dz(j)
-        enddo
-      enddo
-
-      end
-c **********************************************************************
-c **********************************************************************
-
-
-
 c **********************************************************************
 c **********************************************************************
       subroutine dd_m06(symbol,tnam,x,y,z,pema,gpema,dvec,nclu,
@@ -304,7 +165,7 @@ c **********************************************************************
 
 c read template & write QC input file
       open(unit=7,file=tnam)
-      open(unit=10,file='run.inp')
+      open(unit=10,file='qc.inp')
       do i=1,100
         read(unit=7,end=100,fmt='(a80)') string
         if (string.eq."GEOMETRY") then
@@ -329,10 +190,10 @@ c          write(10,*)"end"
       close(10)
 
 c do molpro calculation
-      call system('./ene.x ')
+      call system('./qc.x ')
 
 c read the formatted checkpoint file
-      open (8,file='run.out')
+      open (8,file='qc.out')
 
 c     molpro reorders the atoms, and I can't figure out how to make it stop, so...
       Astr='ATOMIC COORDINATES'
@@ -361,7 +222,7 @@ c                                             to ANT atom K
       enddo
       goto 150
 
- 170  write(6,*)"Couldn't find string '",astr,"' in run.out"
+ 170  write(6,*)"Couldn't find string '",astr,"' in qc.out"
       ifail=1
       go to 999
 
@@ -396,7 +257,7 @@ c     get energy
       goto 200
 
 
- 220  write(6,*)"Couldn't find string '",estr,"' in run.out"
+ 220  write(6,*)"Couldn't find string '",estr,"' in qc.out"
       ifail=3
       go to 999
 
@@ -423,7 +284,7 @@ c     get gradients
       enddo
       goto 300
 
- 320  write(6,*)"Couldn't find string '",gstr,"' in run.out"
+ 320  write(6,*)"Couldn't find string '",gstr,"' in qc.out"
       ifail=4
       go to 999
 
@@ -457,7 +318,7 @@ c     get coupling
       enddo
       goto 400
 
- 420  write(6,*)"Couldn't find string '",nstr,"' in run.out"
+ 420  write(6,*)"Couldn't find string '",nstr,"' in qc.out"
       ifail=5
       go to 999
 

@@ -1,0 +1,21 @@
+***,SAMPLE GEOM                                                                 
+memory,512,m                                                                    
+nosym                                                                           
+noorient                                                                        
+angstrom                                                                        
+geometry = {                                                                    
+ C           0.0000000446       -0.0000000298        0.0000000329
+ H           0.9746605011       -0.4777365028       -0.1212572858
+ H          -0.5790606076       -0.1158498894       -0.9187859834
+ H           0.1391031678        1.0625309267        0.2111376225
+ H          -0.5347035921       -0.4689441803        0.8289052555
+ He          3.4879091748        0.0000000000        0.0000000000
+}                                                                               
+set,spin=0                                                                      
+set,charge=0                                                                    
+basis=aug-cc-pvdz                                                               
+{rhf,}                                                                          
+{mp2,}                                                                          
+molpro_energy=energy                                                            
+show[1,e25.15],molpro_energy                                                    
+status,all,crash                                                                

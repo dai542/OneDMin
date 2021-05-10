@@ -1,0 +1,85 @@
+ ---------------------------
+ OneDMin version 1.0
+ Ahren W. Jasper, Kevin B. Moore III
+ Argonne National Laboratory
+ ---------------------------
+
+ Job Parameters:
+ RANSEED =    153214316
+ TARGET GEOMS: NUMBER =            1 , FILE = target.xyz      
+ BATH GEOMS:   NUMBER =            1 , FILE = bath.xyz        
+ SAMPLES =            3
+ S range =    2.0000000000000000        5.0000000000000000       A
+ R range =    2.2449240966187460        5.6123102415468651       A
+ Spin method =            1
+
+
+ Calculating Energy at Infinite Separation...
+ Energy (in Eh) will be written to zero.ene
+
+
+ Calculating Sigma and Epsilon for each orientation...
+
+ ORIENTATION           1
+
+ Finding distance R for bottom of well [min(V(R))]
+ Step          R[Ang]      V(R)[cm-1]
+    1      3.92754273    -26.16199336
+    2      3.92712192    -26.16210470
+ Found R where V(R) is minimized!!!
+
+ Finding distance R where V(R) = 0:
+ Step          R[Ang]      V(R)[cm-1]
+    1      3.46579611     -4.67292380
+    2      3.46824085      0.41028746
+    3      3.46825606      0.00252275
+ R where V(R)=0 found!!!
+
+ Epsilon =    26.16210470       cm-1
+   Sigma =     3.46825606        Ang
+ Writing values to lj.out
+
+
+ ORIENTATION           2
+
+ Finding distance R for bottom of well [min(V(R))]
+ Step          R[Ang]      V(R)[cm-1]
+    1      3.94747507    -28.76156591
+    2      3.95311727    -28.80361483
+    3      3.95337340    -28.80613142
+ Found R where V(R) is minimized!!!
+
+ Finding distance R where V(R) = 0:
+ Step          R[Ang]      V(R)[cm-1]
+    1      3.52514592      0.61767816
+    2      3.52517248      0.00521849
+ R where V(R)=0 found!!!
+
+ Epsilon =    28.80613142       cm-1
+   Sigma =     3.52517248        Ang
+ Writing values to lj.out
+
+
+ ORIENTATION           3
+
+ Finding distance R for bottom of well [min(V(R))]
+ Step          R[Ang]      V(R)[cm-1]
+    1      3.93735461    -24.88904100
+    2      3.93840429    -24.89401448
+    3      3.93763689    -24.89404615
+ Found R where V(R) is minimized!!!
+
+ Finding distance R where V(R) = 0:
+ Step          R[Ang]      V(R)[cm-1]
+    1      3.48694372     -3.04994918
+    2      3.48800917      0.17167308
+    3      3.48801222      0.00048732
+ R where V(R)=0 found!!!
+
+ Epsilon =    24.89404615       cm-1
+   Sigma =     3.48801222        Ang
+ Writing values to lj.out
+
+
+ Finished sampling desired number of orientatoons
+ Exiting OneDMin...

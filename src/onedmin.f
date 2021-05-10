@@ -240,7 +240,7 @@ c LOOP OVER ORIENTATION SAMPLES
         enddo
         
         write(6,*)'Finding distance R for bottom of well [min(V(R))]'
-        write(6,'(a5,2a16)')' Step','R','V(R)'
+        write(6,'(a5,2a16)')' Step','R[Ang]','V(R)[cm-1]'
 
         ifail=0
  10     continue
@@ -380,7 +380,7 @@ c         try to catch bad optimizations so we can start again with a different 
         close(80) 
 
         write(6,*)'Finding distance R where V(R) = 0:'
-        write(6,'(a5,2a16)')' Step','R','V(R)'
+        write(6,'(a5,2a16)')' Step','R[Ang]','V(R)[cm-1]'
 
 ! NR search for inner turning point
         rr=rr/(2.d0**(1.d0/6.d0))
@@ -476,10 +476,11 @@ c          write(6,*)'s',ncalc2,rr,rrlast,v,vp,vm
         ssavg=ssavg+rr
         ssstd=ssstd+rr**2
 
-        write(6,'(a17,f15.8,a11)')'Writing Epsilon =', -1.0*xv, 
-     & 'to lj.out.'
-        write(6,'(a15,2x,f15.8,a11)')'Writing Sigma =', rr, 
-     & 'to lj.out.'
+        write(6,'(a10,f15.8,a11)')'Epsilon =', -1.0*xv, 
+     & 'cm-1'
+        write(6,'(a10,f15.8,a11)')'Sigma =', rr, 
+     & 'Ang'
+        write(6,*)'Writing values to lj.out'
         write(6,*)
         write(6,*)
 c        write(6,'(3i10,20f15.5)')is,ncalc1,ncalc2,xr,
@@ -524,8 +525,8 @@ c     & xr/(2.d0**(1.d0/6.d0)),xv,rr,v
      & vstd,ssstd
 
       write(81,*)
-      write(81,*)"    SIGMA  = ",ssavg," +/- ",ssstd," A"
-      write(81,*)"   EPSILON = ",vavg," +/- ",vstd," cm-1"
+      write(81,*)"    SIGMA  = ",ssavg," +/- ",ssstd," Ang"
+      write(81,*)"   EPSILON = ",-1.0*vavg," +/- ",vstd," cm-1"
       write(81,*)
       close(81)
 
