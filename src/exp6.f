@@ -104,9 +104,6 @@
       character*2 symb(maxatom),symb2(maxatom),symb3(maxatom)
       integer at(maxatom),at2(maxatom),at3(maxatom)
 
-      dimension tmpprint(50)
-      common/tmp/tmpprint
-
       v=0.d0
       v2=0.d0
       v3=0.d0
@@ -221,11 +218,7 @@ c        call bath(at3,x3,y3,z3,v3,dvdx3,dvdy3,dvdz3,natom3,maxatom) ! 1D diatom
 c        call tbpot(symb2,x2,y2,z2,v2,dvdx2,dvdy2,dvdz2,natom2,maxatom) ! TB hydrocarbon PES
       endif
 
-      tmpprint(1)=v    ! interaction
-      tmpprint(3)=v2   ! target internal
-      tmpprint(4)=v3   ! bath internal
-
-      v=v+v2+v3
+c      v=v+v2+v3
 
       natom2=0
       natom3=0
@@ -6426,9 +6419,6 @@ c      call surf(symb,v,xx,dxx,natom,natom)
       enddo
 
       return
-      end
-
-      subroutine prepot
       end
 
 c

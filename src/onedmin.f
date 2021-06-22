@@ -10,7 +10,7 @@ c        Other PESs can be readily added, including direct dynamics.
 c     dimensions
       integer mnat,mnsamp
       parameter(mnat=100) ! max number of atoms for each collider
-      parameter(mnsamp=50000) ! max number of samples
+      parameter(mnsamp=1000) ! max number of samples
 
 c     units and constants
       double precision amutoau,kb,autoang,autoev,autofs,mu,autocmi,pi
@@ -47,12 +47,6 @@ c
       integer ispin
       logical iangle
 
-
-c common block used to pass the interaction potential
-      double precision tmpprint(50)
-      common/tmp/tmpprint
-
-      call prepot
 
 c READ STANDARD INPUT
 c     Standard input must contain these 5 lines
@@ -271,7 +265,6 @@ c       NR search for minimum energy
               x(i) = xx(1,i)+30./autoang
             enddo
             call pot(symb,x,y,z,zero,dx,dy,dz,nn,nn)
-            zero=tmpprint(1)
             open(unit=82,file='zero.ene')
             write(82,*)zero
             close(82)
@@ -282,7 +275,6 @@ c       NR search for minimum energy
           endif
 
           call pot(symb,x,y,z,vp,dx,dy,dz,nn,nn)
-          vp=(tmpprint(1)-zero)*autocmi           ! the interaction is passed via a common block
 
           do i=nn0+1,nn
             x(i) = xx(1,i)+(rr-reps)/autoang
@@ -291,7 +283,6 @@ c       NR search for minimum energy
           enddo
 
           call pot(symb,x,y,z,vm,dx,dy,dz,nn,nn)
-          vm=(tmpprint(1)-zero)*autocmi
 
           do i=nn0+1,nn
             x(i) = xx(1,i)+rr/autoang
@@ -300,7 +291,6 @@ c       NR search for minimum energy
           enddo
         
           call pot(symb,x,y,z,v,dx,dy,dz,nn,nn)
-          v=(tmpprint(1)-zero)*autocmi
 
           gv=(vp-vm)/(2.d0*reps)       ! numerical gradient w.r.t. the CoM distance
           hv=(vp+vm-2.d0*v)/(reps**2)  ! numerical hessian w.r.t. the CoM distance
@@ -406,7 +396,6 @@ c         try to catch bad optimizations so we can start again with a different 
           enddo
           
           call pot(symb,x,y,z,v,dx,dy,dz,nn,nn)
-          v=(tmpprint(1)-zero)*autocmi
 
           do i=nn0+1,nn
             x(i) = xx(1,i)+(rr+reps)/autoang
@@ -415,7 +404,6 @@ c         try to catch bad optimizations so we can start again with a different 
           enddo
 
           call pot(symb,x,y,z,vp,dx,dy,dz,nn,nn)
-          vp=(tmpprint(1)-zero)*autocmi
 
           do i=nn0+1,nn
             x(i) = xx(1,i)+(rr-reps)/autoang
@@ -424,7 +412,6 @@ c         try to catch bad optimizations so we can start again with a different 
           enddo
 
           call pot(symb,x,y,z,vm,dx,dy,dz,nn,nn)
-          vm=(tmpprint(1)-zero)*autocmi
 
           gv=(vp-vm)/(2.d0*reps)       ! grad
           hv=(vp+vm-2.d0*v)/(reps**2)  ! hess

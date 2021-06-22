@@ -6,6 +6,8 @@ find_package(LAPACK REQUIRED)
 message(STATUS "Found BLAS: ${BLAS_LIBRARIES}")
 message(STATUS "Found LAPACK: ${LAPACK_LIBRARIES}")
 
+set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -Wall -g")
+
 add_library(ljlibs
     ${PROJECT_SOURCE_DIR}/src/mass.f
     ${PROJECT_SOURCE_DIR}/src/spin.f)
