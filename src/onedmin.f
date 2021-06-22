@@ -275,6 +275,7 @@ c       NR search for minimum energy
           endif
 
           call pot(symb,x,y,z,vp,dx,dy,dz,nn,nn)
+          vp=(vp-zero)*autocmi
 
           do i=nn0+1,nn
             x(i) = xx(1,i)+(rr-reps)/autoang
@@ -283,6 +284,7 @@ c       NR search for minimum energy
           enddo
 
           call pot(symb,x,y,z,vm,dx,dy,dz,nn,nn)
+          vm=(vm-zero)*autocmi
 
           do i=nn0+1,nn
             x(i) = xx(1,i)+rr/autoang
@@ -291,6 +293,7 @@ c       NR search for minimum energy
           enddo
         
           call pot(symb,x,y,z,v,dx,dy,dz,nn,nn)
+          v=(v-zero)*autocmi
 
           gv=(vp-vm)/(2.d0*reps)       ! numerical gradient w.r.t. the CoM distance
           hv=(vp+vm-2.d0*v)/(reps**2)  ! numerical hessian w.r.t. the CoM distance
@@ -396,6 +399,7 @@ c         try to catch bad optimizations so we can start again with a different 
           enddo
           
           call pot(symb,x,y,z,v,dx,dy,dz,nn,nn)
+          v=(v-zero)*autocmi
 
           do i=nn0+1,nn
             x(i) = xx(1,i)+(rr+reps)/autoang
@@ -404,6 +408,7 @@ c         try to catch bad optimizations so we can start again with a different 
           enddo
 
           call pot(symb,x,y,z,vp,dx,dy,dz,nn,nn)
+          vp=(vp-zero)*autocmi
 
           do i=nn0+1,nn
             x(i) = xx(1,i)+(rr-reps)/autoang
@@ -412,6 +417,7 @@ c         try to catch bad optimizations so we can start again with a different 
           enddo
 
           call pot(symb,x,y,z,vm,dx,dy,dz,nn,nn)
+          vm=(vm-zero)*autocmi
 
           gv=(vp-vm)/(2.d0*reps)       ! grad
           hv=(vp+vm-2.d0*v)/(reps**2)  ! hess

@@ -23,7 +23,7 @@
  ORIENTATION           1
 
  Finding distance R for bottom of well [min(V(R))]
- Step               R            V(R)
+ Step          R[Ang]      V(R)[cm-1]
     1      3.79699575    -18.59925882
     2      3.82820448    -18.94834785
     3      3.83107146    -19.01171495
@@ -31,19 +31,20 @@
  Found R where V(R) is minimized!!!
 
  Finding distance R where V(R) = 0:
- Step               R            V(R)
+ Step          R[Ang]      V(R)[cm-1]
     1      3.42162572      1.17496519
     2      3.42182221      0.02594001
  R where V(R)=0 found!!!
 
-Writing Epsilon =    19.01214760 to lj.out.
-Writing Sigma =       3.42182221 to lj.out.
+ Epsilon =    19.01214760       cm-1
+   Sigma =     3.42182221        Ang
+ Writing values to lj.out
 
 
  ORIENTATION           2
 
  Finding distance R for bottom of well [min(V(R))]
- Step               R            V(R)
+ Step          R[Ang]      V(R)[cm-1]
     1      3.54131844    -19.62566674
     2      3.66786886    -18.09027877
     3      3.72489370    -20.85926015
@@ -52,19 +53,20 @@ Writing Sigma =       3.42182221 to lj.out.
  Found R where V(R) is minimized!!!
 
  Finding distance R where V(R) = 0:
- Step               R            V(R)
+ Step          R[Ang]      V(R)[cm-1]
     1      3.32339788     -0.61837310
     2      3.32344683      0.00712343
  R where V(R)=0 found!!!
 
-Writing Epsilon =    21.15140419 to lj.out.
-Writing Sigma =       3.32344683 to lj.out.
+ Epsilon =    21.15140419       cm-1
+   Sigma =     3.32344683        Ang
+ Writing values to lj.out
 
 
  ORIENTATION           3
 
  Finding distance R for bottom of well [min(V(R))]
- Step               R            V(R)
+ Step          R[Ang]      V(R)[cm-1]
     1      2.04566894    -20.25904760
  failed rmin
     2      6.42395995     -2.98920949
@@ -99,14 +101,15 @@ Writing Sigma =       3.32344683 to lj.out.
  Found R where V(R) is minimized!!!
 
  Finding distance R where V(R) = 0:
- Step               R            V(R)
+ Step          R[Ang]      V(R)[cm-1]
     1      3.18166438     -3.59520770
     2      3.18311841      0.24206986
     3      3.18312389      0.00090585
  R where V(R)=0 found!!!
 
-Writing Epsilon =    24.32121855 to lj.out.
-Writing Sigma =       3.18312389 to lj.out.
+ Epsilon =    24.32121855       cm-1
+   Sigma =     3.18312389        Ang
+ Writing values to lj.out
 
 
  Finished sampling desired number of orientatoons
