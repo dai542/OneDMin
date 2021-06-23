@@ -1,0 +1,7 @@
+name: onedmin-env
+
+dependencies:
+    - cmake
+    - gfortran_linux-64
+    - blas
+    - openblas # [linux]

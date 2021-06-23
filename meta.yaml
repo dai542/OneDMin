@@ -1,0 +1,19 @@
+# cmd conda build .
+package:
+    name: onedmin
+    version: "1.0.0"
+
+source:
+    path: .
+
+requirements:
+    build:
+        - cmake
+        - gfortran_linux-64  # [linux]
+        - blas
+        - openblas # [linux]
+    run:
+        - cmake
+        - gfortran_linux-64  # [linux]
+        - blas
+        - openblas # [linux]
