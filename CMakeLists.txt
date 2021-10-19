@@ -22,17 +22,17 @@ add_library(ddgaussianlibs
 add_executable(onedmin-exp6.x
     ${PROJECT_SOURCE_DIR}/src/onedmin.f)
 target_link_libraries(onedmin-exp6.x 
-    ${BLAS_LIBRARIES} ${LAPACK_LIBRARIES} ljlibs exp6libs)
+    ljlibs exp6libs ${BLAS_LIBRARIES} ${LAPACK_LIBRARIES})
 
 add_executable(onedmin-dd-molpro.x
     ${PROJECT_SOURCE_DIR}/src/onedmin.f)
 target_link_libraries(onedmin-dd-molpro.x 
-    ${BLAS_LIBRARIES} ${LAPACK_LIBRARIES} ljlibs ddmolprolibs)
+    ljlibs ddmolprolibs ${BLAS_LIBRARIES} ${LAPACK_LIBRARIES})
 
 add_executable(onedmin-dd-gaussian.x
     ${PROJECT_SOURCE_DIR}/src/onedmin.f)
 target_link_libraries(onedmin-dd-gaussian.x 
-    ${BLAS_LIBRARIES} ${LAPACK_LIBRARIES} ljlibs ddgaussianlibs)
+    ljlibs ddgaussianlibs ${BLAS_LIBRARIES} ${LAPACK_LIBRARIES})
 
 install(TARGETS onedmin-exp6.x DESTINATION bin)
 install(TARGETS onedmin-dd-molpro.x DESTINATION bin)
