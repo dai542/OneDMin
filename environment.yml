@@ -4,6 +4,6 @@ channels:
     - conda-forge
 
 dependencies:
-    - conda-forge::gfortran_linux-64=11.2.0
+    - conda-forge::gfortran_linux-64=7.5.0
     - conda-forge::blas
     - conda-forge::openblas # [linux]
