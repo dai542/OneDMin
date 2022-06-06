@@ -23,4 +23,4 @@ and validated for larger systems in
 (5) A. W. Jasper, C. M. Oana, and J. A. Miller, "'Third-body' collision efficiencies for combustion modeling: Hydrocarbons in atomic and diatomic baths," Proc. Combust. Inst. 34 197-204 (2015).  
 
 ## Contact
-Kevin Moore [kmoore@anl.gov]
+Ahren Jasper [ajasper@anl.gov]
