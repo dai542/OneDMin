@@ -3,6 +3,9 @@
 ## Authors
 Ahren W. Jasper, Jim A. Miller, Kevin B. Moore III
 
+# Download
+We do not recommend this in-development GitHub repository to users. [Visit the Papr website for the stable version and user manual](https://tcg.cse.anl.gov/papr/codes/onedmin.html).
+
 # Functionality 
 Lennard-Jones parameters are calculated from full-dimensional intermolecular potentials via one-dimensional minimizations averaged over the colliding partners' relative orientations. This method includes the effect of local anisotropy in the interaction potential and was shown to lead to very accurate predictions of Lennard-Jones collision rates as compared with tabulated values and with higher-level classical diffusion coefficients.
 
